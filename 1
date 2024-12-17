@@ -66,3 +66,121 @@ const biblioteca = new Biblioteca();
 biblioteca.adicionarJogo(new JogoTabuleiro("Xadrez", 1850, "Desconhecido", 2));
 biblioteca.adicionarJogo(new JogoCarta("Uno", 1971, "Mattel", 7));
 console.log(biblioteca.listarJogos());
+
+
+Configuração Inicial do Angular
+Criar o projeto Angular:
+
+bash
+Copiar código
+ng new biblioteca-jogos
+cd biblioteca-jogos
+ng generate component jogos
+ng generate service biblioteca
+Adicionar Angular Material ou Bootstrap:
+
+Para Angular Material:
+bash
+Copiar código
+ng add @angular/material
+Para Bootstrap:
+bash
+Copiar código
+npm install bootstrap
+Adicione ao angular.json:
+json
+Copiar código
+"styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css"]
+Service Angular (biblioteca.service.ts)
+O serviço manipulará os dados da biblioteca.
+
+typescript
+Copiar código
+import { Injectable } from '@angular/core';
+import { Jogo, JogoTabuleiro, JogoCarta } from './jogos.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class BibliotecaService {
+  private jogos: Jogo[] = [];
+
+  adicionarJogo(jogo: Jogo): void {
+    this.jogos.push(jogo);
+  }
+
+  removerJogo(titulo: string): void {
+    this.jogos = this.jogos.filter(j => j.titulo !== titulo);
+  }
+
+  listarJogos(): Jogo[] {
+    return this.jogos;
+  }
+}
+Component Angular (jogos.component.ts)
+Gerencia a interação do usuário.
+
+typescript
+
+import { Component } from '@angular/core';
+import { BibliotecaService } from '../biblioteca.service';
+import { JogoTabuleiro, JogoCarta } from '../jogos.model';
+
+@Component({
+  selector: 'app-jogos',
+  templateUrl: './jogos.component.html',
+  styleUrls: ['./jogos.component.css'],
+})
+export class JogosComponent {
+  jogos = this.bibliotecaService.listarJogos();
+
+  constructor(private bibliotecaService: BibliotecaService) {}
+
+  adicionarJogo(): void {
+    const novoJogo = new JogoTabuleiro('War', 1972, 'Grow', 6);
+    this.bibliotecaService.adicionarJogo(novoJogo);
+    this.jogos = this.bibliotecaService.listarJogos();
+  }
+
+  removerJogo(titulo: string): void {
+    this.bibliotecaService.removerJogo(titulo);
+    this.jogos = this.bibliotecaService.listarJogos();
+  }
+}
+Template HTML (jogos.component.html)
+Exibe e manipula os jogos.
+
+html
+
+<div class="container mt-3">
+  <h2>Biblioteca de Jogos</h2>
+  <ul class="list-group">
+    <li *ngFor="let jogo of jogos" class="list-group-item">
+      {{ jogo.titulo }} ({{ jogo.anoPublicacao }}) - {{ jogo.fabricante }}
+      <button
+        class="btn btn-danger btn-sm float-end"
+        (click)="removerJogo(jogo.titulo)"
+      >
+        Remover
+      </button>
+    </li>
+  </ul>
+  <button class="btn btn-primary mt-3" (click)="adicionarJogo()">
+    Adicionar Jogo de Exemplo
+  </button>
+</div>
+
+
+   
+   
+
+ 
+
+
+
+
+  
+
+  
+
+    
