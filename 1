@@ -1,0 +1,68 @@
+// TypeScript Classes
+
+// Classe abstrata "Jogo"
+abstract class Jogo {
+  constructor(
+    public titulo: string,
+    public anoPublicacao: number,
+    public fabricante: string
+  ) {}
+
+  // Método abstrato
+  abstract exibirRegras(): string;
+}
+
+// Classe concreta "JogoTabuleiro"
+class JogoTabuleiro extends Jogo {
+  constructor(
+    titulo: string,
+    anoPublicacao: number,
+    fabricante: string,
+    public numeroJogadores: number
+  ) {
+    super(titulo, anoPublicacao, fabricante);
+  }
+
+  exibirRegras(): string {
+    return `O jogo ${this.titulo} é jogado por até ${this.numeroJogadores} jogadores.`;
+  }
+}
+
+// Classe concreta "JogoCarta"
+class JogoCarta extends Jogo {
+  constructor(
+    titulo: string,
+    anoPublicacao: number,
+    fabricante: string,
+    public idadeMinima: number
+  ) {
+    super(titulo, anoPublicacao, fabricante);
+  }
+
+  exibirRegras(): string {
+    return `O jogo ${this.titulo} é recomendado para maiores de ${this.idadeMinima} anos.`;
+  }
+}
+
+// Classe "Biblioteca"
+class Biblioteca {
+  private jogos: Jogo[] = [];
+
+  adicionarJogo(jogo: Jogo): void {
+    this.jogos.push(jogo);
+  }
+
+  removerJogo(titulo: string): void {
+    this.jogos = this.jogos.filter(jogo => jogo.titulo !== titulo);
+  }
+
+  listarJogos(): Jogo[] {
+    return this.jogos;
+  }
+}
+
+// Exemplos de uso (pode ser utilizado no Angular Service)
+const biblioteca = new Biblioteca();
+biblioteca.adicionarJogo(new JogoTabuleiro("Xadrez", 1850, "Desconhecido", 2));
+biblioteca.adicionarJogo(new JogoCarta("Uno", 1971, "Mattel", 7));
+console.log(biblioteca.listarJogos());
